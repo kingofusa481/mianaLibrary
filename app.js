@@ -5,7 +5,9 @@ const app = express();
 const port = 3000;
 const path = require("path");
 // const connectDB = require("./db/connectdb");
+const connectDB = require('./db/connectDB');
 
+const book = require("./models/book");
 
 
 
@@ -29,7 +31,7 @@ app.set("views", path.join(__dirname, "views"));
 // app.get('/', (req, res) => {
 //     res.render("index");
 // });
-
+connectDB();
 app.get('/', async(req, res) => {
     
     res.render('Index', {}, (err, html) => {
@@ -38,6 +40,32 @@ app.get('/', async(req, res) => {
         }
         res.render('layout', { title: 'Home', activePage: 'Index', user: {}, body: html });
     });
+});
+app.get("/digital-library", async (req, res)=> {
+    // const existingUser = await getUser(req.user.userId);
+    const categories = {
+        "تفسیر": 101,
+        "تہذیب": 102,
+        "تبلیغ": 103,
+        "اصلاح": 104,
+        "حدیث": 105,
+        "تاریخ": 106,
+        "سائنس": 107,
+        "فقہ": 108,
+        "منطق": 109,
+        "عبادات": 110,
+        "عقائد": 111,
+        "تقابل ادیان": 112,
+        "تصوف": 113,
+        "زبان و ادب": 114,
+      };
+    const allBooks = await book.find();
+    res.render("digitalLibrary", { user: {}, books: allBooks, categories: categories }, (err, html)=>{
+        if(err){
+            res.send("error rendering page");
+        }
+        res.render("layout", {title: "Create Post", activePage: "digital library", user : {}, body: html})
+    })
 });
 
 
