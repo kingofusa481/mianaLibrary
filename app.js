@@ -8,6 +8,13 @@ const path = require("path");
 app.set('view engine', 'ejs');
 app.set("views", path.join(__dirname, "views"));
 
+connectDB();
+
+const fetchAllData = async () => {
+    const data = await accregModel.find();
+    return data;    
+}
+
 app.get('/', (req, res) => {
     res.render("index");
 });
