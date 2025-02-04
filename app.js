@@ -12,6 +12,11 @@ app.get('/', (req, res) => {
     res.render("index");
 });
 
+// books show page
+app.get("/books", (req, res)=> {
+    res.render('books');
+});
+
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
