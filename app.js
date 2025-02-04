@@ -4,7 +4,7 @@ const ejs = require("ejs")
 const app = express();
 const port = 3000;
 const path = require("path");
-const connectDB = require("./db/connectdb");
+// const connectDB = require("./db/connectdb");
 
 
 
