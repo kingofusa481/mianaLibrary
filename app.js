@@ -1,6 +1,7 @@
 const express = require('express');
 const ejs = require("ejs")
-
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const app = express();
 const port = 3000;
 const path = require("path");
@@ -8,6 +9,7 @@ const path = require("path");
 const connectDB = require('./db/connectDB');
 
 const book = require("./models/book");
+const user = require("./models/user");
 
 
 
@@ -15,8 +17,8 @@ app.set('view engine', 'ejs');
 app.set("views", path.join(__dirname, "views"));
 
 
-// app.use(express.json());
-// app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 // app.use(express.static(path.join(__dirname, "./public")));
 
 // app.set("view engine", "ejs");
@@ -39,6 +41,153 @@ app.get('/', async(req, res) => {
             return res.status(500).send(err.message);
         }
         res.render('layout', { title: 'Home', activePage: 'Index', user: {}, body: html });
+    });
+});
+app.get('/login-page', (req, res) => {
+    res.render('login', {}, (err, html) => {
+        if (err) {
+            return res.status(500).send(err.message);
+        }
+        res.render('layout', { title: 'Login', activePage: 'login', user:{}, body: html });
+    });
+});
+app.post('/login', async (req, res) => {
+    try {
+        const { userEmail, userPassword } = req.body;
+        const existingUser = await user.findOne({
+            userEmail
+        });
+        if (!existingUser) {
+            res.render('error', { message: 'User does not exist'}, (err, html) => {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                res.render('layout', { title: 'Error', activePage: 'error', user, body: html });
+            });
+        }
+        else{
+            const passwordMatch = await bcrypt.compare(userPassword, existingUser.userPassword);
+            if (!passwordMatch) {
+                res.render('error', { message: 'Invalid password'}, (err, html) => {
+                    if (err) {
+                        return res.status(500).send(err.message);
+                    }
+                    res.render('layout', { title: 'Error', activePage: 'error', user, body: html });
+                });
+            }
+            else{
+                try {
+                    const token = jwt.sign({ userEmail, userId: existingUser._id }, process.env.JWT_SECRET);
+                    res.cookie('token', token);
+                    res.render('Index', {}, (err, html) => {    
+                        if (err) {
+                            return res.status(500).send(err.message);
+                        }
+                        res.render('layout', { title: 'Home', activePage: 'Index', user:existingUser, body: html });
+                    });
+                } catch (error) {
+                    console.error(error);
+                    res.render('error', { message: `${error.message} /n Error generating token`}, (err, html) => {
+                        if (err) {
+                            return res.status(500).send(err.message);
+                        }
+                        res.render('layout', { title: 'Error', activePage: 'error', user, body: html });
+                    });
+                }
+            }
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while logging in.');
+    }
+});
+app.get('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.redirect('/');
+});
+app.get('/register', (req, res) => {
+    res.render('register', {}, (err, html) => {
+        if (err) {
+            return res.status(500).send(err.message);
+        }
+        res.render('layout', { title: 'Sign Up', activePage: 'register', user:{}, body: html });
+    });
+});
+app.post('/register', async (req, res) => {
+    try {
+        const { userName, userfullName, userEmail, userPassword } = req.body;
+        const existingUser = await user.findOne({
+            userEmail
+        }); 
+        if(existingUser) {
+            // res.status(400).send('User already exists');
+            res.render('error', { message: 'User already exists'}, (err, html) => {
+                if (err) {
+                    return res.status(500).send(err.message);
+                }
+                res.render('layout', { title: 'Error', activePage: 'error', user, body: html });
+            });
+        }
+        else{
+
+            bcrypt.genSalt(10, (err, salt) => {
+                if (err) {
+                    res.render('error', {message: "Error generating salt"}, (err, html) => {
+                        if (err) {
+                            return res.status(500).send(err.message);
+                        }
+                        res.render('layout', { title: 'Error', activePage: 'error', user, body: html });
+                    });
+                }
+                else{
+                    bcrypt.hash(userPassword, salt, async (err, hash) => {
+                        if (err) {
+                            return res.status(500).send('An error occurred while hashing the password.');
+                        }
+                        const newUser = new user({
+                            userName,
+                            userfullName,
+                            userEmail,
+                            userPassword: hash
+                        });
+                        await newUser.save();
+                        try {
+                        const token = jwt.sign({ userEmail, userId: newUser._id }, process.env.JWT_SECRET);
+                        res.cookie('token', token);
+                        } catch (error) {
+                            console.error(error);
+                            res.render('error', { message: `${error.message} /n Error generating token`}, (err, html) => {
+                                if (err) {
+                                    return res.status(500).send(err.message);
+                                }
+                                res.render('layout', { title: 'Error', activePage: 'error', user, body: html });
+                            });
+                        }
+                        
+                        res.render('login', {}, (err, html) => {
+                            if (err) {
+                                return res.status(500).send(err.message);
+                            }
+                            res.render('layout', { title: 'Login', activePage: 'login', user, body: html });
+                        });
+                    });
+                }
+            });
+        }
+
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred while creating a new user.');
+
+    }
+});
+app.get("/error", (req, res) => {
+    res.render('error', {}, (err, html) => {
+        if (err) {
+            return res.status(500).send(err.message);
+        }
+        res.render('layout', { title: 'Error', activePage: 'error', user, body: html });
     });
 });
 app.get("/digital-library", async (req, res)=> {
