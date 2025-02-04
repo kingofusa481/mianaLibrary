@@ -26,8 +26,18 @@ app.set("views", path.join(__dirname, "views"));
 //     return data;    
 // }
 
-app.get('/', (req, res) => {
-    res.render("index");
+// app.get('/', (req, res) => {
+//     res.render("index");
+// });
+
+app.get('/', async(req, res) => {
+    
+    res.render('Index', {}, (err, html) => {
+        if (err) {
+            return res.status(500).send(err.message);
+        }
+        res.render('layout', { title: 'Home', activePage: 'Index', user: {}, body: html });
+    });
 });
 
 
