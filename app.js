@@ -30,6 +30,10 @@ app.get('/', (req, res) => {
     res.render("index");
 });
 
+
+// run code ok data above
+
+
 // books show page
 app.get("/books", (req, res)=> {
     res.render('books');
@@ -171,6 +175,9 @@ app.post("/test4", (req, res)=> {
 
 
 
+
+
+// run code ok data below
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
