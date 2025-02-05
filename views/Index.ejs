@@ -3,40 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Miana Library</title>
     <style>
-        .section {
-            padding: 50px 0;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(45deg, #f3f4f6, #ffffff);
+            padding: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #007bff;
+        }
+
+        .content {
+            margin-top: 5rem;
             text-align: center;
         }
-        .section h2 {
-            margin-bottom: 20px;
+
+        .title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
-        .section p {
-            font-size: 1.2em;
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 section">
-                <h2>Our Home</h2>
-                <p>Welcome to our home section. Here you will find all the information about our library.</p>
-            </div>
-            <div class="col-md-4 section">
-                <h2>Our Books</h2>
-                <p>Explore our vast collection of books. We have something for everyone.</p>
-            </div>
-            <div class="col-md-4 section">
-                <h2>Our Posts</h2>
-                <p>Read our latest posts and stay updated with the latest news and events.</p>
+<body >
+    <div class="hero" style="background: linear-gradient(to right, #576d4f, #94908d)"linear-gradient(to right, #ff7e5f, #feb47b)">
+ 
+    <style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav {
+        animation: fadeIn 1s ease-out;
+    }
+
+    .content {
+        animation: fadeIn 1s ease-out 0.3s backwards;
+    }
+
+    .feature-card {
+        animation: fadeIn 1s ease-out 0.6s backwards;
+    }
+    </style>
+        <div class="content">
+            <h1 class="title">Welcome to Miana Library</h1>
+            <p class="subtitle">Discover thousands of books in our collection</p>
+            <a href="#" class="cta-button">Get Started</a>
+
+            <div class="features">
+                <div class="feature-card">
+                    <h3>Digital Collection</h3>
+                    <p>Access thousands of e-books</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Easy Borrowing</h3>
+                    <p>Simple checkout process</p>
+                </div>
+                <div class="feature-card">
+                    <h3>24/7 Access</h3>
+                    <p>Read anywhere, anytime</p>
+                </div>
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

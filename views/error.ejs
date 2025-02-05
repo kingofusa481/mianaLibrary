@@ -52,3 +52,61 @@
     </div>
 <!-- </body>
 </html> -->
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    }
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        text-align: center;
+    }
+    .error-template {
+        padding: 40px 15px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .error-template h1 {
+        font-size: 4em;
+        color: #343a40;
+    }
+    .error-template h2 {
+        font-size: 2em;
+        color: #6c757d;
+    }
+    .error-details {
+        margin: 20px 0;
+        font-size: 1.2em;
+        color: #495057;
+    }
+    .error-actions .btn {
+        margin: 5px;
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+</style>
+<div class="container">
+    <div class="error-template">
+        <h1>Oops!</h1>
+        <h2>404 Not Found</h2>
+        <div class="error-details">
+            <%=message%>
+        </div>
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary btn-lg">
+                <span class="glyphicon glyphicon-home"></span>
+                Take Me Home 
+            </a>
+            <a href="mailto:support@example.com" class="btn btn-secondary btn-lg">
+                <span class="glyphicon glyphicon-envelope"></span>
+                Contact Support 
+            </a>
+        </div>
+    </div>
+</div>
